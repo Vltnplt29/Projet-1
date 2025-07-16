@@ -200,29 +200,7 @@ async function traiterEntree(formData) {
 }
 
 
-// Afficher et imprimer l’étiquette
-function imprimerEtiquette({ nom, prenom, telephone, email }) {
-  document.getElementById('etiquetteNom').textContent = nom;
-  document.getElementById('etiquettePrenom').textContent = prenom;
-  document.getElementById('etiquetteTel').textContent = telephone;
-  document.getElementById('etiquetteEmail').textContent = email;
 
-  const etiquette = document.getElementById('etiquette');
-
-  // Affiche temporairement l’étiquette pour l’impression
-  etiquette.style.display = 'block';
-
-  // Imprime uniquement ce div
-  const originalContent = document.body.innerHTML;
-  const etiquetteHTML = etiquette.outerHTML;
-
-  document.body.innerHTML = etiquetteHTML;
-  window.print();
-
-  // Restaure la page après impression
-  document.body.innerHTML = originalContent;
-  window.location.reload(); // recharge proprement après impression
-}
 
 
 
