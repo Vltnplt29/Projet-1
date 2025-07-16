@@ -5,6 +5,7 @@ const isLocal = window.location.hostname === 'localhost';
 const COCKPIT_API_URL = isLocal 
   ? 'http://localhost:8888/cockpit-core/api/' 
   : 'https://ton-backend-distant.com/cockpit-core/api/';
+const COCKPIT_API_TOKEN = 'USR-b29b5c88b4490e79305a4526a213ee4ef9788415'
 
 // ==============================
 // 2. Onglets "Entrée / Sortie"
@@ -93,30 +94,32 @@ async function apiGetItemById(collection, id) {
 }
 
   async function loadFormations() {
-    const select = document.getElementById('formationSelect');
+  const select = document.getElementById('formationSelect');
 
-    try {
-      const response = await fetch('http://localhost:8888/cockpit-core/api/content/item/Formations', {
-        method: 'GET',
-        headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${COCKPIT_API_TOKEN}`
-      },
-      });
-      const data = await response.json();
+  try {
+    const response = await fetch(`${COCKPIT_API_URL}content/items/Formations`, {
+      method: 'GET'
+    });
 
-      if(data.entries && data.entries.length > 0) {
-        data.entries.forEach(formation => {
-          const option = document.createElement('option');
-          option.value = formation._id;
-          option.textContent = formation.title || formation.name || 'Formations';
-          select.appendChild(option);
-        });
-      }
-    } catch (err) {
-      console.error('Erreur lors du chargement des formations:', err);
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
     }
+
+    const data = await response.json();
+
+    if (data.entries && data.entries.length > 0) {
+      data.entries.forEach(formation => {
+        const option = document.createElement('option');
+        option.value = formation._id;
+        option.textContent = formation.titre || formation.title || formation.name || 'Formation';
+        select.appendChild(option);
+      });
+    }
+  } catch (err) {
+    console.error('Erreur lors du chargement des formations:', err);
   }
+}
+
 
   loadFormations();
 
@@ -197,6 +200,31 @@ async function traiterEntree(formData) {
 }
 
 
+// Afficher et imprimer l’étiquette
+function imprimerEtiquette({ nom, prenom, telephone, email }) {
+  document.getElementById('etiquetteNom').textContent = nom;
+  document.getElementById('etiquettePrenom').textContent = prenom;
+  document.getElementById('etiquetteTel').textContent = telephone;
+  document.getElementById('etiquetteEmail').textContent = email;
+
+  const etiquette = document.getElementById('etiquette');
+
+  // Affiche temporairement l’étiquette pour l’impression
+  etiquette.style.display = 'block';
+
+  // Imprime uniquement ce div
+  const originalContent = document.body.innerHTML;
+  const etiquetteHTML = etiquette.outerHTML;
+
+  document.body.innerHTML = etiquetteHTML;
+  window.print();
+
+  // Restaure la page après impression
+  document.body.innerHTML = originalContent;
+  window.location.reload(); // recharge proprement après impression
+}
+
+
 
 // ==============================
 // 6. Traitement formulaire : Sortie
@@ -231,7 +259,118 @@ async function traiterSortie(formData) {
     document.getElementById('formSortie').reset();
   }
 }
+// ==============================
+// Nouvelle fonction : récupérer visite avec liens peuplés
+// ==============================
+async function getVisiteWithPopulate(id) {
+  const url = `${COCKPIT_API_URL}content/item/Visite`;
+  try {
+    const response = await fetch(url, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${COCKPIT_API_TOKEN}`
+      },
+      body: JSON.stringify({
+        filter: { _id: id },
+        populate: [
+          'visiteur',
+          'formation',
+          'formation.formateur',
+          'formateur'
+        ]
+      })
+    });
+    if (!response.ok) {
+      console.error('Erreur getVisiteWithPopulate:', response.status, await response.text());
+      return null;
+    }
+    const data = await response.json();
+    return data.entries?.[0] || null;
+  } catch (err) {
+    console.error('Fetch error (getVisiteWithPopulate):', err);
+    return null;
+  }
+}
 
+// ==============================
+// Nouvelle fonction : affichage console des détails d'une visite
+// ==============================
+async function afficherDetailsVisite(id) {
+  const visite = await getVisiteWithPopulate(id);
+  if (!visite) {
+    alert("Visite non trouvée.");
+    return;
+  }
+
+  console.log("Visite complète :", visite);
+
+  const nomVisiteur = visite.visiteur ? (visite.visiteur.nom + ' ' + visite.visiteur.prenom) : 'N/A';
+  const titreFormation = visite.formation ? visite.formation.titre || visite.formation.name || 'N/A' : 'N/A';
+  const nomFormateurDeFormation = visite.formation && visite.formation.formateur 
+    ? (visite.formation.formateur.nom + ' ' + visite.formation.formateur.prenom)
+    : 'N/A';
+  const nomFormateurDirect = visite.formateur ? (visite.formateur.nom + ' ' + visite.formateur.prenom) : 'N/A';
+
+  console.log("Visiteur :", nomVisiteur);
+  console.log("Formation :", titreFormation);
+  console.log("Formateur (via formation) :", nomFormateurDeFormation);
+  console.log("Formateur (direct) :", nomFormateurDirect);
+}
+afficherDetailsVisite(id);
+
+// ==============================
+// Fonction générique pour charger une collection et remplir un select
+// ==============================
+async function loadCollectionIntoSelect(collectionName, selectId, formatOptionText) {
+  const select = document.getElementById(selectId);
+  if (!select) {
+    console.error(`Select avec id "${selectId}" introuvable`);
+    return;
+  }
+
+  try {
+    const response = await fetch(`${COCKPIT_API_URL}content/items/${collectionName}`, {
+      method: 'GET',
+      headers: {
+        'Authorization': `Bearer ${COCKPIT_API_TOKEN}`
+      }
+    });
+
+    if (!response.ok) {
+      throw new Error(`Erreur HTTP ${response.status} lors du chargement de ${collectionName}`);
+    }
+
+    const data = await response.json();
+
+    if (data.entries && data.entries.length > 0) {
+      // Option par défaut vide
+      select.innerHTML = `<option value="">-- Sélectionner --</option>`;
+      data.entries.forEach(item => {
+        const option = document.createElement('option');
+        option.value = item._id;
+        option.textContent = formatOptionText(item);
+        select.appendChild(option);
+      });
+    }
+  } catch (err) {
+    console.error(`Erreur chargement ${collectionName}:`, err);
+  }
+}
+
+// ==============================
+// Charger les formations
+// ==============================
+function formatFormationOption(item) {
+  return item.titre || item.title || 'Formation sans titre';
+}
+
+// ==============================
+// Charger les formateurs
+// ==============================
+function formatFormateurOption(item) {
+  return `${item.nom || ''} ${item.prenom || ''}`.trim() || 'Formateur inconnu';
+}
 
 // ==============================
 // 7. Initialisation
@@ -247,6 +386,8 @@ document.addEventListener('DOMContentLoaded', () => {
   // Formulaires
   const formEntree = document.getElementById('formEntree');
   const formSortie = document.getElementById('formSortie');
+  loadCollectionIntoSelect('Formations', 'formationSelect', formatFormationOption);
+  loadCollectionIntoSelect('Formateurs', 'formateurSelect', formatFormateurOption);
 
   if (formEntree) {
     formEntree.addEventListener('submit', e => {
