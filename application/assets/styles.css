@@ -268,7 +268,27 @@ header {
 }
 
 
+.etiquette {
+  display:none; 
+  padding:20px; 
+  font-size:14px;
+}
 
+  @media print {
+    body * {
+      visibility: hidden;
+    }
+
+    #etiquette {
+      display: block;
+      visibility: visible;
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      padding: 20px;
+    }
+  }
 
 
 
