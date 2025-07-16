@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>Accueil</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="icon" href="assets/img/login.svg" type="image/svg+xml" />
+  <link rel="stylesheet" href="assets/styles.css">
+  <script src="./assets/main.js" defer></script>
+</head>
+
+<body>
+  <header>
+    <div class="navbar">
+      <h1>Bienvenue à l’accueil des visiteurs</h1>
+      <a href="http://localhost:8888/Projet-1/backend/admin-login.php">
+        <button class="navbar-btnLogin">Se connecter</button>
+      </a>
+    </div>
+  </header>
+
+  <div class="navigation">
+    <button class="navigation-btn active" onclick="showTab(event,'entree')">Entrée</button>        
+    <button class="navigation-btn" onclick="showTab(event, 'sortie')">Sortie</button>
+  </div>
+
+  <!-- Onglet Entrée -->
+  <div id="entree" class="navigation-text active">
+    <form id="formEntree"  method="POST">
+      <input type="hidden" name="action" value="entree">
+      
+      <div class="input-visiteur">
+        <label for="nom">Nom</label>
+        <input type="text" name="nom" id="nom" required>
+        <label for="prenom">Prénom</label>
+        <input type="text" name="prenom" id="prenom" required>
+        <label for="telephone">Téléphone</label>
+        <input type="text" name="telephone" id="telephone">
+        <label for="email">Email</label>
+        <input type="email" name="email" id="email" required>
+      </div>
+
+      <br><hr><br>
+      
+      <span>Objet de la visite :</span>
+      <div class="radio-bubbles">
+        <label class="radio-bubble">
+          <input type="radio" name="categorie" id="radio-visite" value="formateur">
+          <span>Visite du personnel</span>
+        </label>
+        <label class="radio-bubble">
+          <input type="radio" name="categorie" id="radio-formation" value="formation">
+          <span>Formations</span>
+        </label>
+      </div>
+      
+      <div id="visiteContainer">
+        <label class="formation-label" for="visite-select">Choisissez la personne que vous visitez :</label>
+        <select class="formation-select" id="visiteSelect" name="formateur">
+          <option value="">-- Sélectionner une personne --</option>
+          <option value="pierre">Pierre Charlier</option>
+          <option value="greg">Greg Fichere</option>
+        </select>
+      </div>
+
+      <div id="formationContainer">
+        <label class="formation-label" for="formationSelect">Choisissez la formation :</label>
+        <select class="formation-select" id="formationSelect" name="formation">
+        <option value="">-- Sélectionner une formation --</option>
+        <!-- Les options dynamiques seront ajoutées ici par JS -->
+        </select>
+      </div>
+
+      <div>  
+        <button class="submit-btn" type="submit">Valider l'entrée</button>
+      </div>
+    </form>
+  </div>
+
+  <!-- Onglet Sortie -->
+  <div id="sortie" class="navigation-text">
+    <form id="formSortie" method="POST">
+      <input type="hidden" name="action" value="sortie">
+      <label for="id">ID visiteur</label>
+      <input class="selectSortie" type="text" name="id" required placeholder="Ex: VST1234">
+    
+      <button class="submit-btn" type="submit">Valider la sortie</button>
+    </form>
+  </div>
+</body>
+</html>

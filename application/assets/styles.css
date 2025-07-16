@@ -1,0 +1,518 @@
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
+/* ============================================
+   0. IMPORTS (Google Fonts, etc.)
+============================================ */
+
+@import url('https://fonts.googleapis.com/css2?family=Karla:ital,wght@0,200..800;1,200..800&family=Martian+Mono:wght@100..800&family=Quicksand:wght@300..700&display=swap');
+
+/* ============================================
+   1. VARIABLES GLOBALES
+============================================ */
+
+:root {
+  --bgbody: #121212;       /* ok */
+  --bgform: #1c1c1c;       /* un tout petit peu plus clair pour la distinction */
+  --bgform-transparent: rgba(81, 72, 72, 0.85);
+  --card: #242424;         /* un peu plus clair que bgform pour démarquer */
+  --vert: #1DB954;       /* vert vif, nickel */
+  --text: #E0E0E0;         /* un peu moins blanc que #EAEAEA pour moins de fatigue */
+  --textblack: black; 
+  --btn-validation: #2b82df;   /* bleu un peu plus foncé pour le bouton */
+  --lightgrey: #444;       /* gris clair plus doux que #333 */
+  --btn-entree: #1DB954;     /* Vert accent déjà présent */
+  --btn-sortie: #E53935;     /* Rouge doux, pas trop flashy */
+  --font: "Martian Mono", monospace;
+}
+
+/* Gérer le style des champs autofill dans Chrome / Chromium */
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+textarea:-webkit-autofill,
+textarea:-webkit-autofill:hover,
+textarea:-webkit-autofill:focus,
+select:-webkit-autofill {
+  /* Le hack pour écraser le fond imposé par Chrome */
+  box-shadow: 0 0 0 1000px var(--bgform) inset !important;
+  -webkit-box-shadow: 0 0 0 1000px var(--bgform) inset !important;
+
+  /* Forcer la couleur du texte */
+  -webkit-text-fill-color: var(--text) !important;
+
+  /* Hack visuel pour éviter les flashs */
+  transition: background-color 9999s ease-in-out 0s !important;
+}
+
+/* Appliquer ton fond sombre aux champs manuellement */
+input,
+textarea,
+select {
+  background-color: var(--bgform);
+  color: var(--text);
+  border: 1px solid var(--lightgrey);
+  padding: 0.6em 1em;
+  border-radius: 4px;
+}
+
+/* ============================================
+   2. STYLES GÉNÉRAUX
+============================================ */
+
+body {
+  font-family: var(--font);
+  background: var(--bgbody);
+  color: var(--text);
+  margin: 0;
+  padding: 0;
+}
+
+header {
+  background: var(--bgbody);
+  color: var(--text);
+  height: 7rem;
+  text-align: center;
+  font-size: 1.5rem;
+  font-weight: 600;
+}
+
+
+/* ============================================
+   3. NAVIGATION (onglets Entrée / Sortie)
+============================================ */
+.navigation {
+  display: flex;
+  justify-content: center;
+  margin: 1.5rem auto;
+  max-width: 600px;
+  gap: 2rem;
+}
+
+.navigation-btn {
+  flex: 1;
+  padding: 0.8rem 1rem;
+  font-size: 1.5rem;
+  font-weight: 700;
+  cursor: pointer;
+  background: var(--btn-sortie);
+  border-radius: 12px;
+  text-align: center;
+  transition: background-color 0.2s ease-in-out, color 0.2s ease-in-out;
+}
+
+.navigation-btn:hover {
+  background-color: var(--bgform-transparent);
+  border-radius: 14px;
+  color: var(--text);
+  backdrop-filter: blur(4px); /* optionnel : effet verre dépoli */
+}
+
+.navigation-btn.active {
+  background: var(--btn-entree);
+  color: var(--textblack);
+  font-weight: 800;
+}
+
+.navigation-text {
+  display: none;
+  padding: 2rem;
+  margin: auto;
+  max-width: 600px;
+  background: var(--bgform);
+  border-radius: 16px;
+
+}
+
+
+.navigation-text form {
+  padding-block-end: 1rem;
+}
+.navigation-text.active {
+  display: block;
+  margin-block-start: 3rem;
+}
+
+.navbar-btnLogin {
+  background-color: var(--bgbtncolor);
+  color: white;
+  border: none;
+  padding: 0.5rem 1rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.3s ease, filter 0.3s ease;
+  font-family: var(--font);
+}
+
+.navbar-btnLogin:hover,
+.navbar-btnLogin:focus {
+  filter: brightness(1.1);
+  outline: none;
+}
+
+.navbar-btnLogin:active {
+  filter: brightness(0.9);
+}
+
+/* ============================================
+   6. FORMULAIRE : Champ #nom, #prenom, #email #telephone
+============================================ */
+.input-visiteur {
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+  padding: 2rem;
+  background-color: var(--bgform);
+  border-radius: 12px;
+}
+
+.input-visiteur label {
+  font-size: 0.9rem;
+  color: var(--text);
+  padding-block-start: 0.5rem;
+}
+
+.input-visiteur input {
+  background-color: transparent;
+  border: 1px solid var(--lightgrey);
+  padding: 0.5rem 0.8rem;
+  border-radius: 6px;
+  color: var(--text);
+  font-size: 1rem;
+  transition: border-color 0.2s ease, background-color 0.2s ease;
+}
+
+.input-visiteur input:focus {
+  outline: none;
+  border-color: var(--lightgrey);
+  background-color: rgba(255, 255, 255, 0.05);
+}
+
+
+
+/* ============================================
+   6. FORMULAIRE : Champ #formation-select spécifique
+   (styles spécifiques, override du général)
+============================================ */
+.selectSortie {
+  padding: 0.5rem;
+}
+
+.radio-bubbles {
+  margin-inline-start: 2rem;
+  padding-block-start: 1.3rem;
+  padding-block-end: 0.7rem;
+
+}
+.formation-label {
+  display: block;
+  margin-block-start: 1rem;
+  padding-block-end: 0.7rem;
+}
+
+.formation-select {
+  width: 100%;
+  max-width: 335px;
+  margin-inline-start: 2.5rem;
+  margin-block-start: 1rem;
+  padding: 0.5rem;
+  font-size: 0.8rem;
+  color: var(--li);
+  background-color: var(--card);
+  border: 1px solid var(--lightgrey);
+  border-radius: 8px;
+  box-shadow: 0 2px 6px var(--lightgrey);
+  cursor: pointer;
+  transition: border-color 0.25s ease, box-shadow 0.25s ease;
+  font-family: var(--font);
+  gap: 2rem;
+}
+
+.formation-select:focus {
+  outline: none;
+  border-color: var(--vert);
+  box-shadow: 0 0 6px 2px var(--lightgrey);
+  background-color: var(--card);
+  margin-inline-start: 2.5rem;
+}
+
+
+.submit-btn {
+  display: inline-block;
+  padding: 0.75rem 2rem; 
+  margin-top: 2.3rem;
+  background-color: var(--btn-validation);
+  color: var(--text);
+  font-weight: 600;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  box-shadow: 0 4px 6px rgba(37, 99, 235, 0.4);
+  transition: background-color 0.25s ease;
+}
+.submit-btn:hover {
+  background-color: #1158d6;
+}
+/* ============================================
+   8. SELECT DE VISITE OU FORMATION (conteneurs à afficher/cacher)
+============================================ */
+#visiteContainer,
+#formationContainer {
+  display: none;
+}
+
+#visiteContainer.active,
+#formationContainer.active {
+  display: block;
+}
+
+
+
+
+
+
+
+
+
+/* ============================================
+   9. DASHBOARD.HTML
+============================================ */
+.dashboard-header h2 {
+  font-size: 1.5rem;
+  margin: 0;
+}
+
+.dashboard-header a {
+  color: var(--vert);
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.dashboard-header a:hover {
+  text-decoration: underline;
+}
+
+.refresh-btn {
+  background-color: var(--btn-validation);
+  color: var(--text);
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+.refresh-btn:hover {
+  background-color: #216bb0;
+}
+
+.dashboard-navbar {
+  background-color: var(--bgbody);
+}
+
+/* =============================
+   CONTENU
+============================= */
+.dashboard-container {
+  padding: 1.5rem;
+  background-color: var(--bgform);
+  margin: 1rem;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+/* =============================
+   SEARCH BAR
+============================= */
+.search-bar {
+  width: 100%;
+  padding: 0.6rem 1rem;
+  margin-bottom: 1rem;
+  border-radius: 8px;
+  border: none;
+  background-color: var(--card);
+  color: var(--text);
+  font-size: 1rem;
+}
+
+/* =============================
+   TABLEAU
+============================= */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  background-color: var(--card);
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+thead {
+  background-color: var(--lightgrey);
+}
+
+thead th {
+  text-align: left;
+  padding: 0.75rem 1rem;
+  font-size: 0.95rem;
+  letter-spacing: 0.5px;
+}
+
+tbody td {
+  padding: 0.75rem 1rem;
+  border-top: 1px solid var(--lightgrey);
+}
+
+/* =============================
+   BADGES
+============================= */
+.badge {
+  display: inline-block;
+  padding: 0.3rem 0.6rem;
+  border-radius: 999px;
+  font-size: 0.85rem;
+  font-weight: bold;
+  color: white;
+}
+
+.badge.visite {
+  background-color: var(--btn-entree);
+}
+
+.badge.formation {
+  background-color: var(--btn-sortie);
+}
+
+
+
+
+
+
+
+/* ============================================
+   7. HISTORIQUE.HTML
+============================================ */
+
+.container {
+  background-color: white;
+  border-radius: 12px;
+  padding: 2rem;
+  max-width: 1000px;
+  margin: auto;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.header h2 {
+  font-size: 1.5rem;
+  color: #1a1a1a;
+}
+
+.back-link {
+  font-size: 0.9rem;
+  color: var(--btn-validation);
+  text-decoration: none;
+}
+
+.controls {
+  margin-top: 1.5rem;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.controls label {
+  color: #333;
+  font-weight: 500;
+}
+
+input[type="date"] {
+  padding: 0.5rem;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  font-size: 1rem;
+}
+
+.btn-primary {
+  background-color: var(--btn-validation);
+  color: white;
+  border: none;
+  border-radius: 6px;
+  padding: 0.6rem 1.2rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.btn-primary:hover {
+  background-color: #1158d6;
+}
+
+.btn-export {
+  background-color: #10b981;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  padding: 0.6rem 1rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.btn-export:hover {
+  background-color: #0f9e6e;
+}
+
+.table-wrapper {
+  margin-top: 1.5rem;
+  overflow-x: auto;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  background-color: var(--bgblue);
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+thead {
+  background-color: #dbeafe;
+  color: #1a1a1a;
+  font-weight: bold;
+}
+
+th, td {
+  padding: 0.8rem 1rem;
+  text-align: left;
+}
+
+tr:nth-child(even) {
+  background-color: white;
+}
+
+.badge {
+  padding: 0.2rem 0.6rem;
+  border-radius: 8px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  display: inline-block;
+}
+
+.badge.visite {
+  background-color: #d1fae5;
+  color: #047857;
+}
+
+.badge.formation {
+  background-color: #f3e8ff;
+  color: #7c3aed;
+}
+
+
+
+

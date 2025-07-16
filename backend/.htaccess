@@ -1,0 +1,18 @@
+# Active le moteur de réécriture
+RewriteEngine On
+
+# Bloque l’accès au dossier src/
+RewriteRule ^src/ - [F,L]
+
+# Empêche le listage des répertoires
+Options -Indexes
+
+# 🔒 Protection de fichiers sensibles (env, git, logs, etc.)
+<FilesMatch "\.(env|json|lock|git|yml|log|md|gitignore|gitattributes|php~|bak)$">
+  Require all denied
+</FilesMatch>
+
+# 🔒 Protection du fichier .htaccess lui-même
+<Files .htaccess>
+  Require all denied
+</Files>
