@@ -196,7 +196,11 @@ async function traiterEntree(formData) {
     alert("Entrée enregistrée !");
     document.getElementById('formEntree').reset();
     updateContainersVisibility();
-  }
+  // Affiche l’étiquette avec les infos visiteur
+  imprimerEtiquette({ nom, prenom, telephone, email });
+
+  // Affiche les détails de la visite en console
+  afficherDetailsVisite(visiteResp._id);
 }
 
 
@@ -241,7 +245,7 @@ async function traiterSortie(formData) {
 // Nouvelle fonction : récupérer visite avec liens peuplés
 // ==============================
 async function getVisiteWithPopulate(id) {
-  const url = `${COCKPIT_API_URL}content/item/Visite`;
+  const url = `${COCKPIT_API_URL}content/items/Visite`;
   try {
     const response = await fetch(url, {
       method: 'POST',
