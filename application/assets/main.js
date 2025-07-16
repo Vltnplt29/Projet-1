@@ -384,4 +384,5 @@ document.addEventListener('DOMContentLoaded', () => {
       traiterSortie(Object.fromEntries(new FormData(formSortie).entries()));
     });
   }
-});
+  })
+}
