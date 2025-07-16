@@ -32,9 +32,11 @@ Base de données :
 -----------------
 - Stockage dans Cockpit CMS (fichiers + base SQLite ou MySQL selon config)
 - Collections utilisées :
-  - Visiteurs
   - Visites
+  - Visiteurs
   - Formations
+  - Formateurs
+  - local
 - Lien entre documents géré via "Content Link"
 
 Installation locale :
