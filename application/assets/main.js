@@ -1,10 +1,8 @@
 // ==============================
 // 1. CONFIG API COCKPIT
 // ==============================
-const isLocal = window.location.hostname === 'localhost';
-const COCKPIT_API_URL = isLocal 
-  ? 'http://localhost:8888/cockpit-core/api/' 
-  : 'https://ton-backend-distant.com/cockpit-core/api/';
+
+const COCKPIT_API_URL = 'http://localhost:8888/cockpit-core/api/';
 const COCKPIT_API_TOKEN = 'USR-b29b5c88b4490e79305a4526a213ee4ef9788415'
 
 // ==============================
